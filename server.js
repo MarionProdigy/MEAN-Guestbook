@@ -64,7 +64,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, info) => {
     });
   });
 
-  // Render edit messages page PEPITA
+  // Render edit messages page
   app.get('/edit', (req, res) => {
     // Sort with latest posts added in database
     db.collection("data").find({}).sort({"_id": 1}).toArray((err, result) => {
