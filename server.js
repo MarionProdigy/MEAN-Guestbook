@@ -1,85 +1,108 @@
 var express = require('express'); // Require Express
-var fs = require("fs"); // Require the module required for writing data
+var app = express(); // Instantiate Express to app-variable
 var bodyParser = require("body-parser"); // Require the module required for using form data
-var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application
+app.use(bodyParser.urlencoded({ extended: true })); // For parsing application
 app.set('view engine', 'ejs'); // Set EJS
 
-// make use of static files
+// Make use of static files
 app.use(express.static(__dirname + '/views/app/css'));
 app.use(express.static(__dirname + '/views/app/'));
+app.set("port", (process.env.PORT || 5000)); // Set port
 
-// ****************************************//
-//                root                     //
-// *************************************** //
+// Initialize constants and a variable
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://user:salasana123@ds026018.mlab.com:26018/tietokanta';
+var db;
 
-app.get('/', (req, res) => {
-  res.render('app/index', {
-    content_title: "Life is wonderful!",
-    content_text: "Please, enjoy all the small things in your life :)"
+// Connect to database
+MongoClient.connect(url, { useNewUrlParser: true }, (err, info) => {
+  // console.log(info);
+  db = info.db('tietokanta');
+
+  // Start server on port 5000
+  app.listen(app.get("port"), function() {
+    console.log("Node app is running on port", app.get("port"));
+  });
+
+  // Render index.ejs to browser
+  app.get('/', (req, res) => {
+    if (err) throw err;
+    res.render('app/index', {
+      content_title: "This is the questbook section",
+      content_text: "Please, write something down :)",
+      content_heading: "GUESTBOOK"
+    });
+  });
+
+  // Render guestbook data to browser
+  app.get('/guestbook', (req, res) => {
+    db.collection("data").find({}).sort({"_id": 1}).toArray(function(err, result) {
+      if (err) throw err;
+      // console.log(result)
+      res.render("app/index-guestbook", {
+        data: result,
+        content_title: "This is the questbook section",
+        content_text: "Please, write something down :)",
+        content_heading: "GUESTBOOK"
+      });
+    });
+  });
+
+  // Render new message to browser
+  app.get('/newmessage', (req, res) => {
+    res.render('app/index-newmessage')
+  });
+
+  // Insert data to database in mlab
+  app.post('/newmessage', (req, res) => {
+    db.collection("data").insertOne(req.body, (err, result) => {
+      if (err) throw err;
+      console.log(req.body);
+      console.log('The data has been updated to our database!');
+      res.redirect('/');
+    });
+  });
+
+  // Render edit messages page PEPITA
+  app.get('/edit', (req, res) => {
+    // Sort with latest posts added in database
+    db.collection("data").find({}).sort({"_id": 1}).toArray((err, result) => {
+     res.render("app/edit-message", {
+      data: result
+    });
   });
 });
 
-// ****************************************//
-//                 newmessage              //
-// *************************************** //
-
-app.get('/newmessage', (req, res) => {
-  res.render('app/index-newmessage')
-});
-
-var json = JSON.parse(require('fs').readFileSync('data.json', 'utf8'));
-var options = { day: 'numeric', weekday: 'long', month: 'long', year: 'numeric', }; // hifitelyä
-var date = new Date();
-
-// User inputs data to the form
-app.post('/newmessage', (req, res) => {
-
-// push data to json-object
-json.push({
-  "username": req.body.username,
-  "country": req.body.country,
-  "message":req.body.message,
-  "profession":req.body.profession,
-  "date": date.toLocaleDateString("en-US", options)
-});
-
-// Parse json-object and write data to data.json-file
-var jsonStr = JSON.stringify(json, null, 4);
-fs.writeFileSync('data.json', jsonStr);
-
-// renderöidään index-newmessage.ejs sivu
-res.render('app/index-newmessage')
-});
-
-// ****************************************//
-//                /guestbook               //
-// *************************************** //
-
-// Render index-guestbook.ejs
-app.get('/guestbook', (req, res) => {
-  res.render('app/index-guestbook', {
-    content_title: "This is the questbook section",
-    content_text: "Please, write something down :)",
-    content_heading: "GUESTBOOK",
-    json: json
+// Edit messages
+app.post('/edit-action', (req, res) => {
+  db.collection("data").updateOne({username: req.body.username}, {$set: {"message": req.body.message}}, (err, result) => {
+    res.render("app/edit-action", {
+      data: result
+    });
   });
 });
 
-// ****************************************//
-//      404 route for undefined routes     //
-// *************************************** //
+  // Render admin page
+  app.get('/admin', (req, res) => {
+    // Sort with latest posts added in database
+    db.collection("data").find({}).sort({"_id": 1}).toArray((err, result) => {
+      if (err) throw err;
+      res.render("app/admin", {
+        data: result
+      });
+    });
+  });
 
-// The 404 Route (Not Found route)
-app.get('*', function(req, res){
-  res.send('Sorry, could not find the requested page', 404);
-});
+  // Remove user from database in mlab
+  app.post('/delete', (req, res) => {
+    db.collection("data").deleteOne({username: req.body.username}, (err, result) => {
+      if (err) throw err;
+      console.log(req.body.username + " has been deleted!");
+      res.render("app/delete", {
+        data: result
+      });
+    });
+  });
 
-// ****************************************//
-//                port                  //
-// *************************************** //
-
-app.listen(8081, () => {
-  console.log('Serveri käynnistyy portista 8081..');
 });

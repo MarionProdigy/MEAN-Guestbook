@@ -1,0 +1,59 @@
+<!-- views/partials/admincontent.ejs -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<% include ../partials/head %>
+
+<body>
+
+<div id="wrapper">
+
+<% include ../partials/branding %>
+
+<h1 style="font-size:26px;">Remove User</h1>
+<div style="margin-top:40px;" id="contant">
+
+  <form method="post" action=/delete>
+    <select style="font-size:22px" name="username">
+      <% data.forEach(function(data) { %>
+        <option value= <%= data.username %>>
+          <%= data.username %>
+        </option>
+        <% }); %>
+    </select>
+  <input style="font-size:20px" value="Delete" type="submit" />
+  </form>
+
+    <table border="1">
+
+      <tr>
+        <th>Username</th>
+        <th>Country</th>
+        <th>Message</th>
+      </tr>
+
+      <% data.forEach(function(data) { %>
+      <tr>
+        <td>
+          <%= data.username %>
+        </td>
+        <td>
+          <%= data.country %>
+        </td>
+        <td>
+          <%= data.message %>
+        </td>
+
+      </tr>
+      <% }); %>
+
+    </table>
+</div>
+
+</div>
+
+<% include ../partials/footer-container %>
+
+</body>
+</html>

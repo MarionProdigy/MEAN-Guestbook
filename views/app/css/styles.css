@@ -29,7 +29,7 @@
 }
 
 form {
-	margin-bottom: 100px;
+	margin-bottom: 40px;
 }
 
 fieldset {
@@ -87,7 +87,7 @@ table {
     width: 100%;
 		font-size: 20px;
 		box-shadow: 10px 10px 5px grey;
-		margin-top: 20px;
+		margin-top: 25px;
 }
 
 table:hover {
@@ -120,6 +120,24 @@ tr:nth-child(even) {
 .kuva2:hover {
 	transform: rotateZ(135deg);
 	transition: 4s ease;
+}
+
+option:nth-child(even) {
+  background: white;
+}
+
+
+option:nth-child(odd) {
+  background: #ade3ec;
+}
+
+input[type="submit"] {
+  width: 100px;
+  background-color: #ff8383;
+}
+
+input[type="submit"]:hover {
+  background-color: red;
 }
 
 * {
@@ -319,6 +337,7 @@ ul.topNav  {
 }
 #contant {
 	width:960px;
+  margin-top: 10px;
 }
 #contant h2{
 	font-family:Georgia, "Times New Roman", Times, serif;
@@ -610,7 +629,8 @@ p.quoteBar {
 }
 
 #footer {
-    background:#4A4A4A;
+  margin-top:10px;
+  background:#4A4A4A;
 	padding:10px;
 	padding-bottom:20px;
 	margin-bottom:30px;
@@ -659,8 +679,9 @@ transition: 2s ease;
 	width:285px;
 	margin-right:10px;
 	float:left;
-	margin-top:20px;
+	margin-top:10px;
 }
+
 .footerForm p{
 	margin-bottom:5px;
 }

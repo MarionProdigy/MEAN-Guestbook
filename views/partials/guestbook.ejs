@@ -1,3 +1,5 @@
+<!-- views/partials/guestbook.ejs -->
+
 <div>
 
 <table border="2">
@@ -6,17 +8,15 @@
     <td style="text-align:center">COUNTRY</td>
     <td style="text-align:center">MESSAGE</td>
     <td style="text-align:center">PROFESSION</td>
-    <td style="text-align:center">TIME STAMP</td>
   </tr>
 
 <!-- render nicely through forEach-->
-<% json.forEach(function(json) { %>
+<% data.forEach(function(data) { %>
   <tr>
-    <td class="joku" style="text-align:center"><strong><%= json.username %></strong></td>
-    <td style="text-align:center"><%= json.country %></td>
-    <td style="text-align:center"><%= json.message %></td>
-    <td style="text-align:center"><%= json.profession %></td>
-    <td style="text-align:center"><%= json.date %></td>
+    <td class="joku" style="text-align:center"><strong><%= data.username %></strong></td>
+    <td style="text-align:center"><%= data.country %></td>
+    <td style="text-align:center"><%= data.message %></td>
+    <td style="text-align:center"><%= data.profession %></td>
   </tr>
     <% }); %>
 
