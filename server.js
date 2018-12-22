@@ -12,7 +12,7 @@ app.set("port", (process.env.PORT || 5000)); // Set port
 
 // Initialize constants and a variable
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://user:salasana123@ds026018.mlab.com:26018/tietokanta';
+const url = Mongo_url;
 var db;
 
 // Connect to database
