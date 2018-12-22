@@ -12,7 +12,7 @@ app.set("port", (process.env.PORT || 5000)); // Set port
 
 // Initialize constants and a variable
 const MongoClient = require('mongodb').MongoClient;
-const url = process.env.Mongo_url;
+const url = process.env.Mongo_url; // environment variable stored in Heroku
 var db;
 
 // Connect to database
