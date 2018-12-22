@@ -12,14 +12,10 @@ app.set("port", (process.env.PORT || 5000)); // Set port
 
 // Initialize constants and a variable
 const MongoClient = require('mongodb').MongoClient;
-const url = Mongo_url;
+const url = process.env.Mongo_url;
 var db;
 
-const aws = require('aws-sdk');
 
-let s3 = new aws.S3({
-  Mongo_url: process.Mongo_url
-});
 
 // Connect to database
 MongoClient.connect(url, { useNewUrlParser: true }, (err, info) => {
